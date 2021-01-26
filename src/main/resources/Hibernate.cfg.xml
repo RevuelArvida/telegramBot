@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='utf-8'?>
+        <!DOCTYPE hibernate-configuration PUBLIC
+                "-//Hibernate/Hibernate Configuration DTD//EN"
+                "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+
+    <session-factory>
+
+        <property name="hibernate.connection.url">jdbc:postgresql://ec2-34-251-118-151.eu-west-1.compute.amazonaws.com:5432/d4hlt96n232fmp</property>
+        <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+        <property name="hibernate.connection.username">gtfbqynfjmrddk</property>
+        <property name="hibernate.connection.password">51f249586b3bc15763c950d3c992f1de30d3c1c8c40569615fe1de685954387b</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQL10Dialect</property>
+
+        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.format_sql">true</property>
+
+        <property name="hibernate.hbm2ddl.auto">validate</property>
+
+        <mapping class="ru.revuelArvida.telegrambot.entities.AnekdotEntity"/>
+        <mapping class="ru.revuelArvida.telegrambot.entities.UserEntity"/>
+
+    </session-factory>
+
+</hibernate-configuration>

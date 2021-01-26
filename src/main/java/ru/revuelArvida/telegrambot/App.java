@@ -2,8 +2,7 @@ package ru.revuelArvida.telegrambot;
 
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
-import ru.revuelArvida.telegrambot.Bot;
+import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;;
 
 public class App {
 
@@ -15,6 +14,8 @@ public class App {
             e.printStackTrace();
         }
 
+        //TODO Set up Env Var
+        //TODO Check need in MultiThreading
     }
 
 }
