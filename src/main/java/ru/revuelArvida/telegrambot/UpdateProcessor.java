@@ -35,19 +35,17 @@ public class UpdateProcessor {
             switch (text) {
                 case "/start":
                     bot.sendMsg(message, "Привет, " + message.getChat().getFirstName() + ", я бот анекдотчик! Знаю все анекдоты про Штирлица! Хочешь расскажу?");
-
-                    if (userEntityRepository.findByChatId(message.getChatId()) == null) {
                         try {
                                 userEntityRepository.createUserEntity(message.getChat().getId(),message.getChatId(),message.getChat().getFirstName(), message.getChat().getLastName(), message.getChat().getUserName());
                             } catch (PersistenceException exc){
                                 exc.printStackTrace();
                             }
-                    }
+
                     break;
 
                 case "Помощь":
                 case "/help":
-                    bot.sendMsg(message, "Я умею предоставлять анекдоты по команде: \n - Вкинь анек \n - анек \n - анекдот \n - Анек \n - Анекдот \nА также искать анеки по команде: \n - Найди мне анек \nВы также моежете предложить анекдот по команде: \n - Предложить анекдот \nДля возврата в главное меню используйте команду: \n - Выход" );
+                    bot.sendMsg(message, "Я умею предоставлять анекдоты по команде: \n - Вкинь анек \n - анек \n - анекдот \n - Анек \n - Анекдот \nА также искать анеки по команде: \n - Найди мне анек \nВы также можете предложить анекдот по команде: \n - Предложить анекдот \nДля возврата в главное меню используйте команду: \n - Выход" );
                     break;
 
                 case "Анекдот":
@@ -66,12 +64,12 @@ public class UpdateProcessor {
                 break;
 
                 case "Найди мне анек":
-                    bot.sendMsg(message, "Количество анеков в базе: " + anekdotEntityRepository.count() + "\n Введите id анека:" +  "\n Для возврата отправьте 'Выход' ");
+                    bot.sendMsg(message, "Количество анеков в базе: " + anekdotEntityRepository.count() + "\n Введите id анека:" +  "\n Для возврата в главное меню напишите: Выход ");
                     bot.setState(States.FINDING);
                     break;
 
                 case "Предложить анекдот":
-                    bot.sendMsg(message, "Отправте свой анекдот про Штирлица:" + "\n Для возврата отправьте 'Выход' ");
+                    bot.sendMsg(message, "Отправте свой анекдот про Штирлица:" + "\n Для возврата в главное меню напишите: Выход ");
                     bot.setState(States.DBPENDING);
                     break;
 
@@ -89,19 +87,21 @@ public class UpdateProcessor {
 
         } else if (bot.getState() == States.FINDING){
 
-                if (text.equals("Выход")) {
+                if (text.equals("Выход") || text.equals("выход")|| text.equals("ВЫХОД")) {
                     bot.setState(States.SLEEP);
                     bot.sendMsg(message,"Возврат в главное меню");
                 } else {
                     try {
                         int id = Integer.parseInt(text);
-                        AnekdotEntity anekdot = anekdotEntityRepository.findById(id);
-                        String anek = anekdot.getAnek();
+                        if (id > 0) {
+                            AnekdotEntity anekdot = anekdotEntityRepository.findById(id);
+                            String anek = anekdot.getAnek();
 
-                        bot.sendMsg(message, anek, id);
-                        bot.setState(States.SLEEP);
+                            bot.sendMsg(message, anek, id);
+                            bot.setState(States.SLEEP);
+                        } else throw new NumberFormatException();
                     } catch(NumberFormatException exc){
-                        bot.sendMsg(message, "Id должен содержать только цифры и быть в пределах размеров базы анекдотов. Попробуйте еще раз!");
+                        bot.sendMsg(message, "Id должен содержать только цифры и быть в пределах размеров базы анекдотов. Попробуйте еще раз! \n Для возврата в главное меню напишите: Выход");
                     }
             }
 
@@ -127,10 +127,10 @@ public class UpdateProcessor {
             switch (text) {
                 case "Approve":
                     anekdotEntityRepository.createAnekdotEntity(proposal.poll());
-                    bot.sendMsg(query.getMessage(), "Анекдот принят");
+                    bot.sendMsg(query.getMessage(), "Анекдот принят" + "/n Количество анеков в предложке: " + proposal.size());
                     break;
                 case "Decline":
-                    bot.sendMsg(query.getMessage(), "Анекдот отклонен");
+                    bot.sendMsg(query.getMessage(), "Анекдот отклонен"+ "/n Количество анеков в предложке: " + proposal.size());
                     proposal.remove();
                     break;
             }
