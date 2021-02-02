@@ -154,7 +154,8 @@ public class Bot extends TelegramLongPollingBot {
         KeyboardRow secondRow = new KeyboardRow();
         KeyboardRow thirdRow = new KeyboardRow();
         firstRow.add(new KeyboardButton("Вкинь анек"));
-        secondRow.add(new KeyboardButton("Найди мне анек"));
+        secondRow.add(new KeyboardButton("Найти анек по Id"));
+        secondRow.add(new KeyboardButton("Найти анек по словам"));
         thirdRow.add(new KeyboardButton("Предложить анекдот"));
         thirdRow.add(new KeyboardButton("Помощь"));
         keyboard.add(firstRow);

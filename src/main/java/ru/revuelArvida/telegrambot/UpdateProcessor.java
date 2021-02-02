@@ -13,9 +13,7 @@ import ru.revuelArvida.telegrambot.repositories.HibernateAnekdotEntityRepository
 import ru.revuelArvida.telegrambot.repositories.HibernateUserEntityRepository;
 
 import javax.persistence.PersistenceException;
-import java.util.PriorityQueue;
-import java.util.Queue;
-import java.util.Random;
+import java.util.*;
 
 @RequiredArgsConstructor
 public class UpdateProcessor {
@@ -62,13 +60,18 @@ public class UpdateProcessor {
                     bot.sendMsg(message,anek,anekdot.getId());
                 break;
 
-                case "Найди мне анек":
-                    bot.sendMsg(message, "Количество анеков в базе: " + anekdotEntityRepository.count() + "\n Введите id анека:" +  "\n Для возврата в главное меню напишите: Выход ");
-                    bot.setState(States.FINDING);
+                case "Найти анек по Id":
+                    bot.sendMsg(message, "Количество анеков в базе: " + anekdotEntityRepository.count() + "\nВведите id анека:" +  "\nДля возврата в главное меню напишите: Выход ");
+                    bot.setState(States.FIND_BY_ID);
+                    break;
+
+                case "Найти анек по словам":
+                    bot.sendMsg(message, "Введите ключевые слова через пробел: " +  "\nДля возврата в главное меню напишите: Выход ");
+                    bot.setState(States.FIND_BY_KEYWORDS);
                     break;
 
                 case "Предложить анекдот":
-                    bot.sendMsg(message, "Отправте свой анекдот про Штирлица:" + "\n Для возврата в главное меню напишите: Выход ");
+                    bot.sendMsg(message, "Отправте свой анекдот про Штирлица:" + "\nДля возврата в главное меню напишите: Выход ");
                     bot.setState(States.ADD_REQUEST);
                     break;
 
@@ -83,7 +86,7 @@ public class UpdateProcessor {
                     bot.sendMsg(message, "Я такого не умею");
             }
 
-        } else if (bot.getState() == States.FINDING){
+        } else if (bot.getState() == States.FIND_BY_ID){
 
                 if (text.equals("Выход") || text.equals("выход")|| text.equals("ВЫХОД")) {
                     bot.setState(States.SLEEP);
@@ -91,7 +94,7 @@ public class UpdateProcessor {
                 } else {
                     try {
                         int id = Integer.parseInt(text);
-                        if (id > 0) {
+                        if (id > 0 ) {
                             AnekdotEntity anekdot = anekdotEntityRepository.findById(id);
                             String anek = anekdot.getAnek();
 
@@ -99,8 +102,36 @@ public class UpdateProcessor {
                             bot.setState(States.SLEEP);
                         } else throw new NumberFormatException();
                     } catch(NumberFormatException exc){
-                        bot.sendMsg(message, "Id должен содержать только цифры и быть в пределах размеров базы анекдотов. Попробуйте еще раз! \n Для возврата в главное меню напишите: Выход");
+                        bot.sendMsg(message, "Id должен содержать только цифры и быть в пределах размеров базы анекдотов. Попробуйте еще раз! \nДля возврата в главное меню напишите: Выход");
                     }
+            }
+
+
+        } else if (bot.getState() == States.FIND_BY_KEYWORDS) {
+            if (text.equals("Выход") || text.equals("выход")|| text.equals("ВЫХОД")) {
+
+                bot.setState(States.SLEEP);
+                bot.sendMsg(message,"Возврат в главное меню");
+
+            } else {
+                List<String> keyWords = new ArrayList<>();
+                String[] words = text.split(" ");
+
+                for (String word : words) {
+                    keyWords.add(word);
+                }
+
+                List<AnekdotEntity> anekdotEntityList = anekdotEntityRepository.findByKeyWords(keyWords);
+
+                if (!anekdotEntityList.isEmpty()) {
+
+                    for (AnekdotEntity anek : anekdotEntityList) {
+                        bot.sendMsg(message, anek.getAnek() + "\nId анекдота: " + anek.getId(), anek.getId());
+                    }
+
+                    bot.setState(States.SLEEP);
+                } else
+                    bot.sendMsg(message, "Ничего не найдено попробуйте еще раз. \nТакже, пожалуйста не используйте слово Штирлиц \nДля возврата в главное меню напишите: Выход");
             }
 
         } else if (bot.getState() == States.ADD_REQUEST) {
@@ -113,7 +144,7 @@ public class UpdateProcessor {
 
                 chat.setId(297075285L);
                 msg.setChat(chat);
-                bot.sendMsg(msg, "В предложку закинут анекдот!" + "\n Количество анеков в предложке: " + proposal.size());
+                bot.sendMsg(msg, "В предложку закинут анекдот!" + "\nКоличество анеков в предложке: " + proposal.size());
             } else bot.sendMsg(message,"Возврат в главное меню");
             bot.setState(States.SLEEP);
 
@@ -128,11 +159,11 @@ public class UpdateProcessor {
 
                 case "Approve":
                     anekdotEntityRepository.createAnekdotEntity(proposal.poll());
-                    bot.sendMsg(query.getMessage(), "Анекдот принят" + "/n Количество анеков в предложке: " + proposal.size());
+                    bot.sendMsg(query.getMessage(), "Анекдот принят" + "/nКоличество анеков в предложке: " + proposal.size());
                     break;
 
                 case "Decline":
-                    bot.sendMsg(query.getMessage(), "Анекдот отклонен"+ "/n Количество анеков в предложке: " + proposal.size());
+                    bot.sendMsg(query.getMessage(), "Анекдот отклонен"+ "/nКоличество анеков в предложке: " + proposal.size());
                     proposal.remove();
                     break;
             }

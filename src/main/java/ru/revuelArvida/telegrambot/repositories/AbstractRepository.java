@@ -13,7 +13,7 @@ public class AbstractRepository {
     protected final SessionFactory factory;
 
     protected <T> T run(Function<Session, T> function) {
-        try(Session s = factory.openSession()) {
+        try(Session s = factory.openSession()){
             return function.apply(s);
         }
     }
