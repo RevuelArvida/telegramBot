@@ -13,7 +13,6 @@ import ru.revuelArvida.telegrambot.repositories.HibernateAnekdotEntityRepository
 import ru.revuelArvida.telegrambot.repositories.HibernateUserEntityRepository;
 
 import javax.persistence.PersistenceException;
-import java.util.Collection;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Random;
@@ -33,6 +32,7 @@ public class UpdateProcessor {
         String text = message.getText();
         if(bot.getState() == States.SLEEP) {
             switch (text) {
+
                 case "/start":
                     bot.sendMsg(message, "Привет, " + message.getChat().getFirstName() + ", я бот анекдотчик! Знаю все анекдоты про Штирлица! Хочешь расскажу?");
                         try {
@@ -40,7 +40,6 @@ public class UpdateProcessor {
                             } catch (PersistenceException exc){
                                 exc.printStackTrace();
                             }
-
                     break;
 
                 case "Помощь":
@@ -70,11 +69,10 @@ public class UpdateProcessor {
 
                 case "Предложить анекдот":
                     bot.sendMsg(message, "Отправте свой анекдот про Штирлица:" + "\n Для возврата в главное меню напишите: Выход ");
-                    bot.setState(States.DBPENDING);
+                    bot.setState(States.ADD_REQUEST);
                     break;
 
                 case "3765":
-
                     if (proposal.peek()!= null) {
                         bot.sendMsg(message, "В предложке " + proposal.size() + " анеков");
                         bot.sendAdmin(message, proposal.peek());
@@ -105,12 +103,14 @@ public class UpdateProcessor {
                     }
             }
 
-        } else if (bot.getState() == States.DBPENDING) {
+        } else if (bot.getState() == States.ADD_REQUEST) {
             if (!text.equals("Выход")) {
-                proposal.add(text);
-                bot.sendMsg(message, "Анекдот отправлен");
                 Message msg = new Message();
                 Chat chat = new Chat();
+
+                proposal.add(text);
+                bot.sendMsg(message, "Анекдот отправлен");
+
                 chat.setId(297075285L);
                 msg.setChat(chat);
                 bot.sendMsg(msg, "В предложку закинут анекдот!" + "\n Количество анеков в предложке: " + proposal.size());
@@ -125,10 +125,12 @@ public class UpdateProcessor {
         String text = query.getData();
         if (text.equals("Approve") || text.equals("Decline")){
             switch (text) {
+
                 case "Approve":
                     anekdotEntityRepository.createAnekdotEntity(proposal.poll());
                     bot.sendMsg(query.getMessage(), "Анекдот принят" + "/n Количество анеков в предложке: " + proposal.size());
                     break;
+
                 case "Decline":
                     bot.sendMsg(query.getMessage(), "Анекдот отклонен"+ "/n Количество анеков в предложке: " + proposal.size());
                     proposal.remove();

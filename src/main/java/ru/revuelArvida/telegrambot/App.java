@@ -14,8 +14,6 @@ public class App {
             e.printStackTrace();
         }
 
-        //TODO Set up Env Var
-        //TODO Check need in MultiThreading
     }
 
 }

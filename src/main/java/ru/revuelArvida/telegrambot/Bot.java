@@ -18,21 +18,16 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-
-
 import java.io.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @RequiredArgsConstructor
 public class Bot extends TelegramLongPollingBot {
 
     private final String botName;
     private final String token;
-    private final ExecutorService es = Executors.newFixedThreadPool(50);
 
     @Setter
     @Getter
@@ -41,7 +36,7 @@ public class Bot extends TelegramLongPollingBot {
     private UpdateProcessor processor = new UpdateProcessor(this);
 
     @Getter
-    private int amount = 0;
+    private int amount;
 
     private Bot(){
         botName = "botName";
@@ -61,13 +56,16 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        es.submit( () -> {
-            if (update.hasMessage() && update.getMessage().hasText()) {
-                processor.processMessage(update.getMessage());
-            } else if(update.hasCallbackQuery()) {
-                processor.processQuery(update.getCallbackQuery());
-            }
-        });
+
+        if (update.hasMessage() && update.getMessage().hasText()) {
+
+            processor.processMessage(update.getMessage());
+
+        } else if(update.hasCallbackQuery()) {
+
+            processor.processQuery(update.getCallbackQuery());
+
+        };
     }
 
     void sendAud(CallbackQuery query, String text){
@@ -171,12 +169,13 @@ public class Bot extends TelegramLongPollingBot {
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         List<InlineKeyboardButton> buttons1 = new ArrayList<>();
         InlineKeyboardButton button = new InlineKeyboardButton();
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+
         button.setText("Аудиоверсия");
         button.setCallbackData(Integer.toString(anekId));
         buttons1.add(button);
         buttons.add(buttons1);
 
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         inlineKeyboardMarkup.setKeyboard(buttons);
         return inlineKeyboardMarkup;
     }
@@ -186,6 +185,8 @@ public class Bot extends TelegramLongPollingBot {
         List<InlineKeyboardButton> buttons = new ArrayList<>();
         InlineKeyboardButton buttonApprove = new InlineKeyboardButton();
         InlineKeyboardButton buttonDecline = new InlineKeyboardButton();
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+
         buttonApprove.setText("Approve");
         buttonApprove.setCallbackData("Approve");
         buttonDecline.setText("Decline");
@@ -196,7 +197,7 @@ public class Bot extends TelegramLongPollingBot {
         buttons.add(buttonDecline);
         keyboard.add(buttons);
 
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+
         inlineKeyboardMarkup.
                 setKeyboard(keyboard);
 
@@ -206,6 +207,9 @@ public class Bot extends TelegramLongPollingBot {
     private InputFile getAudio(String text) throws Exception {
         VoiceProvider tts = new VoiceProvider("8bac82206e9544328b43a9328adad894");
         VoiceParameters params = new VoiceParameters(text, Languages.Russian);
+        FileOutputStream fileOutputStream = new FileOutputStream("src/main/resources/Anek.mp3");
+        File createdAudioFile = new File("src/main/resources/Anek.mp3");
+        InputFile inputFile = new InputFile();
 
         params.setCodec(AudioCodec.MP3);
         params.setVoice("Marina");
@@ -215,15 +219,15 @@ public class Bot extends TelegramLongPollingBot {
 
         byte[] voice = tts.speech(params);
 
-        FileOutputStream fileOutputStream = new FileOutputStream("src/main/resources/Anek.mp3");
+
         fileOutputStream.write(voice, 0, voice.length);
         fileOutputStream.flush();
         fileOutputStream.close();
-        File fileIO = new File("src/main/resources/Anek.mp3");
 
-        InputFile file = new InputFile();
-        file.setMedia(fileIO);
-        return file;
+
+
+        inputFile.setMedia(createdAudioFile);
+        return inputFile;
     }
 
 }
