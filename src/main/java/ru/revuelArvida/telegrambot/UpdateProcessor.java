@@ -159,11 +159,11 @@ public class UpdateProcessor {
 
                 case "Approve":
                     anekdotEntityRepository.createAnekdotEntity(proposal.poll());
-                    bot.sendMsg(query.getMessage(), "Анекдот принят" + "/nКоличество анеков в предложке: " + proposal.size());
+                    bot.sendMsg(query.getMessage(), "Анекдот принят" + "\nКоличество анеков в предложке: " + proposal.size());
                     break;
 
                 case "Decline":
-                    bot.sendMsg(query.getMessage(), "Анекдот отклонен"+ "/nКоличество анеков в предложке: " + proposal.size());
+                    bot.sendMsg(query.getMessage(), "Анекдот отклонен"+ "\nКоличество анеков в предложке: " + proposal.size());
                     proposal.remove();
                     break;
             }
