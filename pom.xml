@@ -11,8 +11,9 @@
 
     <repositories>
         <repository>
-            <id>local_repo</id>
-            <url>F:\Programming\TelegramBot\src\main\resources</url>
+            <id>project.local</id>
+            <name>project</name>
+            <url>file:${project.basedir}/repo</url>
         </repository>
     </repositories>
 
@@ -22,6 +23,12 @@
     </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.voicerss</groupId>
+            <artifactId>voicerss_tts</artifactId>
+            <version>1.0</version>
+        </dependency>
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -75,16 +82,16 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
+                <version>3.8.1</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>3.0.0-M1</version>
             </plugin>
 
         </plugins>
     </build>
-
-
 
 </project>
