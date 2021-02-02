@@ -9,7 +9,7 @@ public class HibernateConfiguration {
 
     private static SessionFactory initializeSessionFactory(){
         Configuration configuration = new Configuration()
-                .configure();
+                .configure("src/main/resources/Hibernate.cfg.xml");
 
         return  configuration.buildSessionFactory();
     }
