@@ -94,7 +94,7 @@ public class UpdateProcessor {
 
                 if (text.equals("Выход") || text.equals("выход")|| text.equals("ВЫХОД")) {
                     bot.setState(States.SLEEP);
-                    bot.sendMsg(message,"Возврат в главное меню");
+                    bot.sendMsg(message,"Вот, что я нашел:");
                 } else {
                     try {
                         int id = Integer.parseInt(text);
