@@ -130,8 +130,9 @@ public class UpdateProcessor {
 
                 if (!anekdotEntityList.isEmpty()) {
 
-                    bot.setState(States.SLEEP);
+
                     for (AnekdotEntity anek : anekdotEntityList) {
+                        bot.setState(States.SLEEP);
                         bot.sendMsg(message, anek.getAnek() + "\nId анекдота: " + anek.getId(), anek.getId());
                     }
 
