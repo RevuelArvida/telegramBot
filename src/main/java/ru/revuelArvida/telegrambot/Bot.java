@@ -14,11 +14,13 @@ import org.telegram.telegrambots.meta.api.objects.*;
 
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import javax.validation.constraints.NotNull;
 import java.io.*;
 import java.io.File;
 import java.util.ArrayList;
@@ -106,7 +108,9 @@ public class Bot extends TelegramLongPollingBot {
         s.setChatId(msg.getChatId().toString());
         s.setText(text);
 
-        setButtons(s);
+        if(state == States.SLEEP){
+        setButtons(s);}
+        else setExit(s);
 
         try {
             execute(s);
@@ -162,6 +166,21 @@ public class Bot extends TelegramLongPollingBot {
         keyboard.add(firstRow);
         keyboard.add(secondRow);
         keyboard.add(thirdRow);
+
+        keyboardMarkup.setKeyboard(keyboard);
+        sendMessage.setReplyMarkup(keyboardMarkup);
+    }
+
+    void setExit(SendMessage sendMessage){
+        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+        keyboardMarkup.setSelective(true);
+        keyboardMarkup.setResizeKeyboard(true);
+        keyboardMarkup.setOneTimeKeyboard(true);
+        List<KeyboardRow> keyboard = new ArrayList<>();
+
+        KeyboardRow firstRow = new KeyboardRow();
+        firstRow.add(new KeyboardButton("Выход"));
+        keyboard.add(firstRow);
 
         keyboardMarkup.setKeyboard(keyboard);
         sendMessage.setReplyMarkup(keyboardMarkup);

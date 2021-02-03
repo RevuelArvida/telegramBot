@@ -61,18 +61,22 @@ public class UpdateProcessor {
                 break;
 
                 case "Найти анек по Id":
+                    bot.setState(States.SEARCH_BY_ID);
                     bot.sendMsg(message, "Количество анеков в базе: " + anekdotEntityRepository.count() + "\nВведите id анека:" +  "\nДля возврата в главное меню напишите: Выход ");
-                    bot.setState(States.FIND_BY_ID);
                     break;
 
                 case "Найти анек по словам":
+                    bot.setState(States.SEARCH_BY_KEYWORDS);
                     bot.sendMsg(message, "Введите ключевые слова через пробел: " +  "\nДля возврата в главное меню напишите: Выход ");
-                    bot.setState(States.FIND_BY_KEYWORDS);
                     break;
 
                 case "Предложить анекдот":
-                    bot.sendMsg(message, "Отправте свой анекдот про Штирлица:" + "\nДля возврата в главное меню напишите: Выход ");
                     bot.setState(States.ADD_REQUEST);
+                    bot.sendMsg(message, "Отправте свой анекдот про Штирлица:" + "\nДля возврата в главное меню напишите: Выход ");
+                    break;
+
+                case "Выход":
+                    bot.sendMsg(message, "Вы уже находитесь в главном меню");
                     break;
 
                 case "3765":
@@ -86,7 +90,7 @@ public class UpdateProcessor {
                     bot.sendMsg(message, "Я такого не умею");
             }
 
-        } else if (bot.getState() == States.FIND_BY_ID){
+        } else if (bot.getState() == States.SEARCH_BY_ID){
 
                 if (text.equals("Выход") || text.equals("выход")|| text.equals("ВЫХОД")) {
                     bot.setState(States.SLEEP);
@@ -107,7 +111,7 @@ public class UpdateProcessor {
             }
 
 
-        } else if (bot.getState() == States.FIND_BY_KEYWORDS) {
+        } else if (bot.getState() == States.SEARCH_BY_KEYWORDS) {
             if (text.equals("Выход") || text.equals("выход")|| text.equals("ВЫХОД")) {
 
                 bot.setState(States.SLEEP);
@@ -118,10 +122,11 @@ public class UpdateProcessor {
                 String[] words = text.split(" ");
 
                 for (String word : words) {
-                    keyWords.add(word);
+                    if (word.length() >= 3) keyWords.add(word.toLowerCase(Locale.ROOT));
                 }
 
                 List<AnekdotEntity> anekdotEntityList = anekdotEntityRepository.findByKeyWords(keyWords);
+                sort(anekdotEntityList, keyWords);
 
                 if (!anekdotEntityList.isEmpty()) {
 
@@ -176,4 +181,21 @@ public class UpdateProcessor {
         }
     }
 
+    private void sort(List<AnekdotEntity> anekdotEntityList, List<String> words){
+        Iterator<AnekdotEntity> i = anekdotEntityList.iterator();
+        while (i.hasNext()){
+            AnekdotEntity anek = i.next();
+            int count = 0;
+
+            for (String word: words) {
+                if(!anek.getAnek().contains(word)) count++;
+            }
+
+
+            if ( (words.size() - count) >= 2){
+                i.remove();
+                System.out.println("Удаляем " + anek.getId());
+            }
+        }
+    }
 }

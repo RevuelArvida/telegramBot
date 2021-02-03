@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -25,4 +26,17 @@ public class AnekdotEntity {
         this.anek = anek;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AnekdotEntity that = (AnekdotEntity) o;
+        return id.equals(that.id) && anek.equals(that.anek);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, anek);
+    }
 }

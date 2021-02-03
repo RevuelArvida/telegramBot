@@ -5,7 +5,9 @@ import ru.revuelArvida.telegrambot.entities.AnekdotEntity;
 
 import javax.persistence.NoResultException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 public class HibernateAnekdotEntityRepository extends AbstractRepository implements AnekdotEntityRepository{
 
@@ -37,17 +39,21 @@ public class HibernateAnekdotEntityRepository extends AbstractRepository impleme
     @Override
     public List<AnekdotEntity> findByKeyWords(List<String> words) {
         List<AnekdotEntity> anekdotEntityList = new ArrayList<>();
+
         try{
             for (String word: words) {
-                if (word.equals("Штирлиц") | word.equals("ШТИРЛИЦ") | word.equals("штирлиц") || word.length() <= 3) {
+
+                if (word.equals("штирлиц")) {
                 } else {
-                    List<AnekdotEntity> aneks = run(session -> session.createQuery("from AnekdotEntity where anek like :word", AnekdotEntity.class)
+
+                    List<AnekdotEntity> aneks = run(session -> session.createQuery("from AnekdotEntity where lower(anek) like lower(:word)", AnekdotEntity.class)
                             .setParameter("word", "%" + word + "%")
                             .getResultList());
+
                     for (AnekdotEntity anek: aneks) {
-                        if (anekdotEntityList.contains(anek)){}
-                        else anekdotEntityList.add(anek);
+                        if (!anekdotEntityList.contains(anek)) anekdotEntityList.add(anek);
                     }
+
                 }
             }
         } catch (NoResultException exc) {
