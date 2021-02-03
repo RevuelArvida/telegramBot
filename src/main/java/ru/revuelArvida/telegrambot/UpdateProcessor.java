@@ -178,8 +178,8 @@ public class UpdateProcessor {
                     break;
 
                 case "Decline":
-                    bot.sendMsg(query.getMessage(), "Анекдот отклонен"+ "\nКоличество анеков в предложке: " + proposal.size());
                     proposal.remove();
+                    bot.sendMsg(query.getMessage(), "Анекдот отклонен"+ "\nКоличество анеков в предложке: " + proposal.size());
                     break;
             }
 
