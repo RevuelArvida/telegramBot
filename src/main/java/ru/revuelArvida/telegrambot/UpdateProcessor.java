@@ -131,10 +131,12 @@ public class UpdateProcessor {
 
                 if (!anekdotEntityList.isEmpty()) {
                     bot.setState(States.SLEEP);
+                    bot.sendMsg(message,""); //set reply keyboard
 
                     for (AnekdotEntity anek : anekdotEntityList) {
                         bot.sendMsg(message, anek.getAnek() + "\nId анекдота: " + anek.getId(), anek.getId());
                     }
+
 
                 } else
                     bot.sendMsg(message, "Ничего не найдено попробуйте еще раз. \nТакже, пожалуйста не используйте слово Штирлиц \nДля возврата в главное меню напишите: Выход");

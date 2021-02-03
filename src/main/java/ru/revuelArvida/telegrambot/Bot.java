@@ -125,8 +125,6 @@ public class Bot extends TelegramLongPollingBot {
         s.setText(text);
 
         setInline(s,anekId);
-        setButtons(s);
-
 
         try {
             execute(s);
