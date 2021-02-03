@@ -91,75 +91,78 @@ public class UpdateProcessor {
                     bot.sendMsg(message, "Я такого не умею");
             }
 
-        } else if (bot.getState() == States.SEARCH_BY_ID){
+        } else {
+            boolean exit = text.equals("Выход") || text.equals("выход") || text.equals("ВЫХОД");
+            if (bot.getState() == States.SEARCH_BY_ID){
 
-                if (text.equals("Выход") || text.equals("выход")|| text.equals("ВЫХОД")) {
-                    bot.setState(States.SLEEP);
+                    if (exit) {
+                        bot.setState(States.SLEEP);
 
-                } else {
-                    try {
-                        int id = Integer.parseInt(text);
-                        if (id > 0 ) {
-                            AnekdotEntity anekdot = anekdotEntityRepository.findById(id);
-                            String anek = anekdot.getAnek();
+                    } else {
+                        try {
+                            int id = Integer.parseInt(text);
+                            if (id > 0 ) {
+                                AnekdotEntity anekdot = anekdotEntityRepository.findById(id);
+                                String anek = anekdot.getAnek();
 
-                            bot.setState(States.SLEEP);
+                                bot.setState(States.SLEEP);
 
-                            bot.sendMsg(message,"Вот, что я нашел:"); //Set replyKeyboard
-                            bot.sendMsg(message, anek, id);
+                                bot.sendMsg(message,"Вот, что я нашел:"); //Set replyKeyboard
+                                bot.sendMsg(message, anek, id);
 
-                        } else throw new NumberFormatException();
-                    } catch(NumberFormatException exc){
-                        bot.sendMsg(message, "Id должен содержать только цифры и быть в пределах размеров базы анекдотов. Попробуйте еще раз! \nДля возврата в главное меню напишите: Выход");
-                    }
-            }
-
-
-        } else if (bot.getState() == States.SEARCH_BY_KEYWORDS) {
-            if (text.equals("Выход") || text.equals("выход")|| text.equals("ВЫХОД")) {
-
-                bot.setState(States.SLEEP);
-
-                bot.sendMsg(message,"Возврат в главное меню");
-
-            } else {
-                List<String> keyWords = new ArrayList<>();
-                String[] words = text.split(" ");
-
-                for (String word : words) {
-                    if (word.length() >= 3) keyWords.add(word.toLowerCase(Locale.ROOT));
+                            } else throw new NumberFormatException();
+                        } catch(NumberFormatException exc){
+                            bot.sendMsg(message, "Id должен содержать только цифры и быть в пределах размеров базы анекдотов. Попробуйте еще раз! \nДля возврата в главное меню напишите: Выход");
+                        }
                 }
 
-                List<AnekdotEntity> anekdotEntityList = anekdotEntityRepository.findByKeyWords(keyWords);
-                sort(anekdotEntityList, keyWords);
 
-                if (!anekdotEntityList.isEmpty()) {
+            } else if (bot.getState() == States.SEARCH_BY_KEYWORDS) {
+                if (exit) {
+
                     bot.setState(States.SLEEP);
-                    bot.sendMsg(message,"Вот, что я нашел:"); //Set replyKeyboard
 
-                    for (AnekdotEntity anek : anekdotEntityList) {
-                        bot.sendMsg(message, anek.getAnek() + "\nId анекдота: " + anek.getId(), anek.getId());
+                    bot.sendMsg(message,"Возврат в главное меню");
+
+                } else {
+                    List<String> keyWords = new ArrayList<>();
+                    String[] words = text.split(" ");
+
+                    for (String word : words) {
+                        if (word.length() >= 3) keyWords.add(word.toLowerCase(Locale.ROOT));
                     }
 
+                    List<AnekdotEntity> anekdotEntityList = anekdotEntityRepository.findByKeyWords(keyWords);
+                    sort(anekdotEntityList, keyWords);
 
-                } else
-                    bot.sendMsg(message, "Ничего не найдено попробуйте еще раз. \nТакже, пожалуйста не используйте слово Штирлиц \nДля возврата в главное меню напишите: Выход");
+                    if (!anekdotEntityList.isEmpty()) {
+                        bot.setState(States.SLEEP);
+                        bot.sendMsg(message,"Вот, что я нашел:"); //Set replyKeyboard
+
+                        for (AnekdotEntity anek : anekdotEntityList) {
+                            bot.sendMsg(message, anek.getAnek() + "\nId анекдота: " + anek.getId(), anek.getId());
+                        }
+
+
+                    } else
+                        bot.sendMsg(message, "Ничего не найдено попробуйте еще раз. \nТакже, пожалуйста не используйте слово Штирлиц \nДля возврата в главное меню напишите: Выход");
+                }
+
+            } else if (bot.getState() == States.ADD_REQUEST) {
+                bot.setState(States.SLEEP);
+                if (!exit) {
+                    Message msg = new Message();
+                    Chat chat = new Chat();
+
+                    proposal.add(text);
+                    bot.sendMsg(message, "Анекдот отправлен");
+
+                    chat.setId(Long.parseLong(getenv.get("ADMIN_CHAT")));
+                    msg.setChat(chat);
+                    bot.sendMsg(msg, "В предложку закинут анекдот!" + "\nКоличество анеков в предложке: " + proposal.size());
+                } else bot.sendMsg(message,"Возврат в главное меню");
+
             }
-
-        } else if (bot.getState() == States.ADD_REQUEST) {
-            bot.setState(States.SLEEP);
-            if (!text.equals("Выход")) {
-                Message msg = new Message();
-                Chat chat = new Chat();
-
-                proposal.add(text);
-                bot.sendMsg(message, "Анекдот отправлен");
-
-                chat.setId(Long.parseLong(getenv.get("ADMIN_CHAT")));
-                msg.setChat(chat);
-                bot.sendMsg(msg, "В предложку закинут анекдот!" + "\nКоличество анеков в предложке: " + proposal.size());
-            } else bot.sendMsg(message,"Возврат в главное меню");
-
         }
 
     }
