@@ -94,7 +94,7 @@ public class UpdateProcessor {
 
                 if (text.equals("Выход") || text.equals("выход")|| text.equals("ВЫХОД")) {
                     bot.setState(States.SLEEP);
-                    bot.sendMsg(message,"Вот, что я нашел:"); //Set replyKeyboard
+
                 } else {
                     try {
                         int id = Integer.parseInt(text);
@@ -103,7 +103,10 @@ public class UpdateProcessor {
                             String anek = anekdot.getAnek();
 
                             bot.setState(States.SLEEP);
+
+                            bot.sendMsg(message,"Вот, что я нашел:"); //Set replyKeyboard
                             bot.sendMsg(message, anek, id);
+
                         } else throw new NumberFormatException();
                     } catch(NumberFormatException exc){
                         bot.sendMsg(message, "Id должен содержать только цифры и быть в пределах размеров базы анекдотов. Попробуйте еще раз! \nДля возврата в главное меню напишите: Выход");
