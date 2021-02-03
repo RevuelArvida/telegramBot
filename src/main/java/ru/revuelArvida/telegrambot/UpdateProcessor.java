@@ -188,7 +188,7 @@ public class UpdateProcessor {
             int count = 0;
 
             for (String word: words) {
-                if(!anek.getAnek().contains(word)) count++;
+                if(anek.getAnek().contains(word)) count++;
             }
 
 
