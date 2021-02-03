@@ -131,7 +131,7 @@ public class UpdateProcessor {
 
                 if (!anekdotEntityList.isEmpty()) {
                     bot.setState(States.SLEEP);
-                    bot.sendMsg(message,""); //set reply keyboard
+                    bot.sendMsg(message,"Внимание! Анекдот:"); //set reply keyboard
 
                     for (AnekdotEntity anek : anekdotEntityList) {
                         bot.sendMsg(message, anek.getAnek() + "\nId анекдота: " + anek.getId(), anek.getId());
