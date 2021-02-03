@@ -192,7 +192,7 @@ public class UpdateProcessor {
             }
 
 
-            if ( (words.size() - count) >= 1){
+            if ( (words.size() - count) <= 1){
                 i.remove();
             }
         }
