@@ -8,9 +8,12 @@ import org.hibernate.service.ServiceRegistry;
 import ru.revuelArvida.telegrambot.entities.AnekdotEntity;
 import ru.revuelArvida.telegrambot.entities.UserEntity;
 
+import java.util.Map;
 import java.util.Properties;
 
 public class HibernateConfiguration {
+
+    private static final Map<String, String> getenv = System.getenv();
 
     private static SessionFactory factory;
 
@@ -30,9 +33,9 @@ public class HibernateConfiguration {
 
                 Properties settings = new Properties();
                 settings.put(Environment.DRIVER, "org.postgresql.Driver");
-                settings.put(Environment.URL, "jdbc:postgresql://ec2-34-251-118-151.eu-west-1.compute.amazonaws.com:5432/d4hlt96n232fmp");
-                settings.put(Environment.USER, "gtfbqynfjmrddk");
-                settings.put(Environment.PASS, "51f249586b3bc15763c950d3c992f1de30d3c1c8c40569615fe1de685954387b");
+                settings.put(Environment.URL, getenv.get("DB_URL"));
+                settings.put(Environment.USER, getenv.get("DB_USER"));
+                settings.put(Environment.PASS, getenv.get("DB_PASSWORD"));
                 settings.put(Environment.DIALECT, "org.hibernate.dialect.PostgreSQL10Dialect");
 
                 settings.put(Environment.SHOW_SQL, true);

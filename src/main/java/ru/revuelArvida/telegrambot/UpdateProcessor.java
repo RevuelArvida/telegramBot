@@ -18,6 +18,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class UpdateProcessor {
 
+    private static final Map<String, String> getenv = System.getenv();
     private final Bot bot;
     private SessionFactory factory = HibernateConfiguration.getFactory();
     HibernateAnekdotEntityRepository anekdotEntityRepository = new HibernateAnekdotEntityRepository(factory);
@@ -154,7 +155,7 @@ public class UpdateProcessor {
                 proposal.add(text);
                 bot.sendMsg(message, "Анекдот отправлен");
 
-                chat.setId(297075285L);
+                chat.setId(Long.parseLong(getenv.get("ADMIN_CHAT")));
                 msg.setChat(chat);
                 bot.sendMsg(msg, "В предложку закинут анекдот!" + "\nКоличество анеков в предложке: " + proposal.size());
             } else bot.sendMsg(message,"Возврат в главное меню");

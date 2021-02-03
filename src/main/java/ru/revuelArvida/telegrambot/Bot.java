@@ -14,23 +14,23 @@ import org.telegram.telegrambots.meta.api.objects.*;
 
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import javax.validation.constraints.NotNull;
 import java.io.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 public class Bot extends TelegramLongPollingBot {
 
     private final String botName;
     private final String token;
+    private static final Map<String, String> getenv = System.getenv();
 
     @Setter
     @Getter
@@ -226,7 +226,7 @@ public class Bot extends TelegramLongPollingBot {
     }
 
     private InputFile getAudio(String text) throws Exception {
-        VoiceProvider tts = new VoiceProvider("8bac82206e9544328b43a9328adad894");
+        VoiceProvider tts = new VoiceProvider(getenv.get("VOICE_API"));
         VoiceParameters params = new VoiceParameters(text, Languages.Russian);
         FileOutputStream fileOutputStream = new FileOutputStream("src/main/resources/Anek.mp3");
         File createdAudioFile = new File("src/main/resources/Anek.mp3");
