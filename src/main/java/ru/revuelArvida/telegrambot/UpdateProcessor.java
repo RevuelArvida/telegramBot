@@ -115,6 +115,7 @@ public class UpdateProcessor {
             if (text.equals("Выход") || text.equals("выход")|| text.equals("ВЫХОД")) {
 
                 bot.setState(States.SLEEP);
+
                 bot.sendMsg(message,"Возврат в главное меню");
 
             } else {
@@ -129,10 +130,9 @@ public class UpdateProcessor {
                 sort(anekdotEntityList, keyWords);
 
                 if (!anekdotEntityList.isEmpty()) {
-
+                    bot.setState(States.SLEEP);
 
                     for (AnekdotEntity anek : anekdotEntityList) {
-                        bot.setState(States.SLEEP);
                         bot.sendMsg(message, anek.getAnek() + "\nId анекдота: " + anek.getId(), anek.getId());
                     }
 

@@ -109,8 +109,8 @@ public class Bot extends TelegramLongPollingBot {
         s.setText(text);
 
         if(state == States.SLEEP){
-        setButtons(s);}
-        else setExit(s);
+            setButtons(s);
+        } else setExit(s);
 
         try {
             execute(s);
@@ -124,9 +124,10 @@ public class Bot extends TelegramLongPollingBot {
         s.setChatId(msg.getChatId().toString());
         s.setText(text);
 
+        setInline(s,anekId);
         setButtons(s);
 
-        s.setReplyMarkup(setInline(anekId));
+
         try {
             execute(s);
         } catch (TelegramApiException exc) {
@@ -139,7 +140,7 @@ public class Bot extends TelegramLongPollingBot {
         s.setChatId(msg.getChatId().toString());
         s.setText("Предложка: " + text);
 
-        s.setReplyMarkup(setInline());
+        setInline(s);
         try {
             execute(s);
         } catch (TelegramApiException exc) {
@@ -175,7 +176,7 @@ public class Bot extends TelegramLongPollingBot {
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
         keyboardMarkup.setSelective(true);
         keyboardMarkup.setResizeKeyboard(true);
-        keyboardMarkup.setOneTimeKeyboard(true);
+        keyboardMarkup.setOneTimeKeyboard(false);
         List<KeyboardRow> keyboard = new ArrayList<>();
 
         KeyboardRow firstRow = new KeyboardRow();
@@ -186,7 +187,8 @@ public class Bot extends TelegramLongPollingBot {
         sendMessage.setReplyMarkup(keyboardMarkup);
     }
 
-    InlineKeyboardMarkup setInline(int anekId) {
+
+    void setInline(SendMessage sendMessage, int anekId) {
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         List<InlineKeyboardButton> buttons1 = new ArrayList<>();
         InlineKeyboardButton button = new InlineKeyboardButton();
@@ -198,10 +200,10 @@ public class Bot extends TelegramLongPollingBot {
         buttons.add(buttons1);
 
         inlineKeyboardMarkup.setKeyboard(buttons);
-        return inlineKeyboardMarkup;
+        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
     }
 
-    InlineKeyboardMarkup setInline(){
+    void setInline(SendMessage sendMessage){
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         List<InlineKeyboardButton> buttons = new ArrayList<>();
         InlineKeyboardButton buttonApprove = new InlineKeyboardButton();
@@ -222,7 +224,7 @@ public class Bot extends TelegramLongPollingBot {
         inlineKeyboardMarkup.
                 setKeyboard(keyboard);
 
-        return inlineKeyboardMarkup;
+        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
     }
 
     private InputFile getAudio(String text) throws Exception {
