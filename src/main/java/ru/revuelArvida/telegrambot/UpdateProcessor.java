@@ -94,7 +94,7 @@ public class UpdateProcessor {
 
                 if (text.equals("Выход") || text.equals("выход")|| text.equals("ВЫХОД")) {
                     bot.setState(States.SLEEP);
-                    bot.sendMsg(message,"Вот, что я нашел:");
+                    bot.sendMsg(message,"Вот, что я нашел:"); //Set replyKeyboard
                 } else {
                     try {
                         int id = Integer.parseInt(text);
@@ -131,7 +131,7 @@ public class UpdateProcessor {
 
                 if (!anekdotEntityList.isEmpty()) {
                     bot.setState(States.SLEEP);
-                    bot.sendMsg(message,"Внимание! Анекдот:"); //set reply keyboard
+                    bot.sendMsg(message,"Вот, что я нашел:"); //Set replyKeyboard
 
                     for (AnekdotEntity anek : anekdotEntityList) {
                         bot.sendMsg(message, anek.getAnek() + "\nId анекдота: " + anek.getId(), anek.getId());
