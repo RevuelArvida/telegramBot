@@ -194,7 +194,6 @@ public class UpdateProcessor {
 
             if ( (words.size() - count) >= 1){
                 i.remove();
-                System.out.println("Удаляем " + anek.getId());
             }
         }
     }
