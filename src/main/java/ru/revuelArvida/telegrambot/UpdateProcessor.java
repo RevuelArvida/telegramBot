@@ -102,8 +102,8 @@ public class UpdateProcessor {
                             AnekdotEntity anekdot = anekdotEntityRepository.findById(id);
                             String anek = anekdot.getAnek();
 
-                            bot.sendMsg(message, anek, id);
                             bot.setState(States.SLEEP);
+                            bot.sendMsg(message, anek, id);
                         } else throw new NumberFormatException();
                     } catch(NumberFormatException exc){
                         bot.sendMsg(message, "Id должен содержать только цифры и быть в пределах размеров базы анекдотов. Попробуйте еще раз! \nДля возврата в главное меню напишите: Выход");
@@ -130,16 +130,17 @@ public class UpdateProcessor {
 
                 if (!anekdotEntityList.isEmpty()) {
 
+                    bot.setState(States.SLEEP);
                     for (AnekdotEntity anek : anekdotEntityList) {
                         bot.sendMsg(message, anek.getAnek() + "\nId анекдота: " + anek.getId(), anek.getId());
                     }
 
-                    bot.setState(States.SLEEP);
                 } else
                     bot.sendMsg(message, "Ничего не найдено попробуйте еще раз. \nТакже, пожалуйста не используйте слово Штирлиц \nДля возврата в главное меню напишите: Выход");
             }
 
         } else if (bot.getState() == States.ADD_REQUEST) {
+            bot.setState(States.SLEEP);
             if (!text.equals("Выход")) {
                 Message msg = new Message();
                 Chat chat = new Chat();
@@ -151,7 +152,6 @@ public class UpdateProcessor {
                 msg.setChat(chat);
                 bot.sendMsg(msg, "В предложку закинут анекдот!" + "\nКоличество анеков в предложке: " + proposal.size());
             } else bot.sendMsg(message,"Возврат в главное меню");
-            bot.setState(States.SLEEP);
 
         }
 
@@ -192,7 +192,7 @@ public class UpdateProcessor {
             }
 
 
-            if ( (words.size() - count) >= 2){
+            if ( (words.size() - count) >= 1){
                 i.remove();
                 System.out.println("Удаляем " + anek.getId());
             }
