@@ -7,7 +7,9 @@ import javax.persistence.NoResultException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HibernateAnekdotEntityRepository extends AbstractRepository implements AnekdotEntityRepository{
+public class HibernateAnekdotEntityRepository
+        extends AbstractRepository
+        implements AnekdotEntityRepository{
 
     public HibernateAnekdotEntityRepository(SessionFactory factory){
         super(factory);
@@ -43,7 +45,8 @@ public class HibernateAnekdotEntityRepository extends AbstractRepository impleme
 
                 if (word.equals("штирлиц")) { } else {
 
-                    List<AnekdotEntity> aneks = run(session -> session.createQuery("from AnekdotEntity where lower(anek) like lower(:word)", AnekdotEntity.class)
+                    List<AnekdotEntity> aneks = run(session -> session.createQuery(
+                            "from AnekdotEntity where lower(anek) like lower(:word)", AnekdotEntity.class)
                             .setParameter("word", "%" + word + "%")
                             .getResultList());
 
