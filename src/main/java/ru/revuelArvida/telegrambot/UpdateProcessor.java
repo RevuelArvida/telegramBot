@@ -97,7 +97,7 @@ public class UpdateProcessor {
                 case "3765":
                     if (proposal.peek()!= null) {
                         bot.sendMsg(message, "В предложке " + proposal.size() + " анеков");
-                        bot.sendAdmin(message, proposal.peek());
+                        bot.sendWithApproval(message, proposal.peek());
                     } else bot.sendMsg(message, "Предложка пуста");
                     break;
 
@@ -169,11 +169,11 @@ public class UpdateProcessor {
             } else if (bot.getState() == States.ADD_REQUEST) {
                 bot.setState(States.SLEEP);
                 if (!exit) {
-                    Message msg = new Message();
-                    Chat chat = new Chat();
-
                     proposal.add(text);
                     bot.sendMsg(message, "Анекдот отправлен");
+
+                    Message msg = new Message();
+                    Chat chat = new Chat();
 
                     chat.setId(Long.parseLong(getenv.get("ADMIN_CHAT")));
                     msg.setChat(chat);

@@ -44,6 +44,13 @@ public class Bot extends TelegramLongPollingBot {
     private Bot(){
         botName = "botName";
         token = "token";
+
+        Message msg = new Message();
+        Chat chat = new Chat();
+
+        chat.setId(Long.parseLong(getenv.get("ADMIN_CHAT")));
+        msg.setChat(chat);
+        sendMsg(msg, "Я запустился!");
     }
 
 
@@ -119,7 +126,7 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
 
-    void sendAdmin(Message msg, String text){
+    void sendWithApproval(Message msg, String text){
         SendMessage s = new SendMessage();
         s.setChatId(msg.getChatId().toString());
         s.setText("Предложка: " + text);
