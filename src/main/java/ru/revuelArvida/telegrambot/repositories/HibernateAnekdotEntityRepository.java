@@ -5,9 +5,7 @@ import ru.revuelArvida.telegrambot.entities.AnekdotEntity;
 
 import javax.persistence.NoResultException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 
 public class HibernateAnekdotEntityRepository extends AbstractRepository implements AnekdotEntityRepository{
 
@@ -43,8 +41,7 @@ public class HibernateAnekdotEntityRepository extends AbstractRepository impleme
         try{
             for (String word: words) {
 
-                if (word.equals("штирлиц")) {
-                } else {
+                if (word.equals("штирлиц")) { } else {
 
                     List<AnekdotEntity> aneks = run(session -> session.createQuery("from AnekdotEntity where lower(anek) like lower(:word)", AnekdotEntity.class)
                             .setParameter("word", "%" + word + "%")

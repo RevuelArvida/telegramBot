@@ -72,20 +72,6 @@ public class Bot extends TelegramLongPollingBot {
     }
 
     void sendAud(CallbackQuery query, String text){
-//        SendVoice v = new SendVoice();
-//        v.setChatId(query.getMessage().getChatId().toString());
-//
-//        try {
-//            v.setVoice(getAudio(text));
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//        try{
-//            execute(v);
-//        } catch (TelegramApiException exc){
-//            exc.printStackTrace();
-//        }
         SendAudio a = new SendAudio();
         a.setChatId(query.getMessage().getChatId().toString());
 
@@ -240,12 +226,9 @@ public class Bot extends TelegramLongPollingBot {
 
         byte[] voice = tts.speech(params);
 
-
         fileOutputStream.write(voice, 0, voice.length);
         fileOutputStream.flush();
         fileOutputStream.close();
-
-
 
         inputFile.setMedia(createdAudioFile);
         return inputFile;

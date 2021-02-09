@@ -17,13 +17,6 @@ public class HibernateConfiguration {
 
     private static SessionFactory factory;
 
-//    private static SessionFactory initializeSessionFactory(){
-//        Configuration configuration = new Configuration()
-//                .configure();
-//
-//        return  configuration.buildSessionFactory();
-//    }
-
     private HibernateConfiguration(){};
 
     public static SessionFactory getFactory() {
